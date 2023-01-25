@@ -401,7 +401,24 @@ module PromiseAPI = {
   ) => Js.Promise.t<unit> = "copyFile"
 
   @module("fs") @scope("promises")
-  external lchmod: (~path: @unwrap [#Str(string)], ~mode: int) => Js.Promise.t<unit> = "lchmod"
+  external lchmod: (
+    ~path: @unwrap [#Str(string) | #Buffer(Buffer.t) | #URL(Url.t)],
+    ~mode: int,
+  ) => Js.Promise.t<unit> = "lchmod"
+
+  @module("fs") @scope("promises")
+  external lchown: (
+    ~path: @unwrap [#Str(string) | #Buffer(Buffer.t) | #URL(Url.t)],
+    ~uid: int,
+    ~gid: int,
+  ) => Js.Promise.t<unit> = "lchown"
+
+  @module("fs") @scope("promises")
+  external lutimes: (
+    ~path: @unwrap [#Str(string) | #Buffer(Buffer.t) | #URL(Url.t)],
+    ~atime: @unwrap [#Str(string) | #Num(int) | #Date(Js.Date.t)],
+    ~mtime: @unwrap [#Str(string) | #Num(int) | #Date(Js.Date.t)],
+  ) => Js.Promise.t<unit> = "lutimes"
 
   @module("fs") @scope("promises")
   external link: (
@@ -459,6 +476,26 @@ module PromiseAPI = {
     ~flags: Flag.t,
     ~mode: int,
   ) => Js.Promise.t<FileHandle.t> = "open"
+
+  type opendirOptions = {
+    encoding?: string,
+    bufferSize?: int,
+  }
+  @module("fs") @scope("promises")
+  external opendir: (
+    ~path: @unwrap [#Str(string) | #Buffer(Buffer.t) | #URL(Url.t)],
+    ~options: opendirOptions=?,
+  ) => Js.Promise.t<Dir.t> = "opendir"
+
+  type readdirOptions = {
+    encoding?: string,
+    withFileTypes?: bool,
+  }
+  @module("fs") @scope("promises")
+  external readdir: (
+    ~path: @unwrap [#Str(string) | #Buffer(Buffer.t) | #URL(Url.t)],
+    ~options: readdirOptions=?,
+  ) => Js.Promise.t<Dir.t> = "readdir"
 
   @module("fs") @scope("promises")
   external stat: @unwrap [#Str(string) | #Buffer(Buffer.t) | #URL(Url.t)] => Js.Promise.t<Stats.t> =
